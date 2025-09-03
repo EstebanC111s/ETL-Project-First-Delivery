@@ -32,48 +32,7 @@ We analyze public service providers offering **water supply (acueducto)**, **sew
 
 ## ⭐ Star Schema — Data Warehouse
 
-erDiagram
-    DIM_PRESTADOR {
-        INT  prestador_id PK
-        TEXT nombre
-        TEXT nit
-        TEXT tipo_prestador
-        TEXT clasificacion
-    }
-
-    DIM_UBICACION {
-        INT  ubicacion_id PK
-        TEXT departamento
-        TEXT municipio
-    }
-
-    DIM_SERVICIO {
-        INT  servicio_id PK
-        TEXT servicio
-        INT  has_acueducto
-        INT  has_alcantarillado
-        INT  has_aseo
-    }
-
-    DIM_ESTADO {
-        INT  estado_id PK
-        TEXT estado
-        TEXT tipo_inscripcion
-    }
-
-    FACT_PRESTACION {
-        INT  fact_id PK
-        INT  prestador_id FK
-        INT  ubicacion_id FK
-        INT  servicio_id FK
-        INT  estado_id FK
-    }
-
-    %% Relaciones (1:N)
-    DIM_PRESTADOR ||--o{ FACT_PRESTACION : "prestador_id"
-    DIM_UBICACION ||--o{ FACT_PRESTACION : "ubicacion_id"
-    DIM_SERVICIO  ||--o{ FACT_PRESTACION : "servicio_id"
-    DIM_ESTADO    ||--o{ FACT_PRESTACION : "estado_id"
+<img width="989" height="611" alt="image" src="https://github.com/user-attachments/assets/f13ca878-da45-43da-8168-a222716d64c2" />
 
 
 
@@ -88,29 +47,7 @@ The model follows a star schema design:
 ---
 ## ETL FLOW
 
-flowchart LR
-    %% ====== Styles ======
-    classDef src fill:#eef4ff,stroke:#6b8cff,stroke-width:1.2,color:#111;
-    classDef proc fill:#e5f7ee,stroke:#3bb273,stroke-width:1.2,color:#111;
-    classDef load fill:#fff2d6,stroke:#e0ad00,stroke-width:1.2,color:#111;
-    classDef db   fill:#efe6ff,stroke:#7d5bd0,stroke-width:1.2,color:#111;
-    classDef viz  fill:#e8f7e9,stroke:#48a868,stroke-width:1.2,color:#111;
-    classDef note fill:transparent,stroke:transparent,color:#666,font-size:12px;
-
-    %% ====== Nodes ======
-    A["CSV RUPS<br/>(>13k rows)"]:::src
-    B["extract.py<br/>(robust read)"]:::src
-    C["transform.py<br/>(cleaning + service flags + filtering)"]:::proc
-    D["load.py<br/>(insert into SQLite)"]:::load
-    E["SQLite: <code>database/rups.db</code><br/>Table: <code>prestadores</code>"]:::db
-    F["EDA / KPIs / Maps<br/>(notebooks)"]:::viz
-
-    %% ====== Flow with edge labels ======
-    A -- "raw data" --> B
-    B -- "DataFrame" --> C
-    C -- "clean DataFrame" --> D
-    D -- "INSERT" --> E
-    E -- "SELECT" --> F
+<img width="2073" height="81" alt="image" src="https://github.com/user-attachments/assets/edfb2795-7fd3-4955-9206-658e33cf71b3" />
 
 
 
