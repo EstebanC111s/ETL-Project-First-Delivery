@@ -32,7 +32,48 @@ We analyze public service providers offering **water supply (acueducto)**, **sew
 
 ## ⭐ Star Schema — Data Warehouse
 
-<img width="989" height="611" alt="image" src="https://github.com/user-attachments/assets/f2782ef3-a15d-4819-8400-f87a7434bcf5" />
+erDiagram
+    dim_prestador {
+      INT  prestador_id PK
+      TEXT nombre
+      TEXT nit
+      TEXT tipo_prestador
+      TEXT clasificacion
+    }
+
+    dim_ubicacion {
+      INT  ubicacion_id PK
+      TEXT departamento
+      TEXT municipio
+    }
+
+    dim_servicio {
+      INT  servicio_id PK
+      TEXT servicio
+      INT  has_acueducto
+      INT  has_alcantarillado
+      INT  has_aseo
+    }
+
+    dim_estado {
+      INT  estado_id PK
+      TEXT estado
+      TEXT tipo_inscripcion
+    }
+
+    fact_prestacion {
+      INT  fact_id PK
+      INT  prestador_id FK
+      INT  ubicacion_id FK
+      INT  servicio_id FK
+      INT  estado_id FK
+    }
+
+    dim_prestador ||--o{ fact_prestacion : prestador_id
+    dim_ubicacion ||--o{ fact_prestacion : ubicacion_id
+    dim_servicio  ||--o{ fact_prestacion : servicio_id
+    dim_estado    ||--o{ fact_prestacion : estado_id
+
 
 
 The model follows a star schema design:
@@ -46,7 +87,14 @@ The model follows a star schema design:
 ---
 ## ETL FLOW
 
-<img width="2073" height="81" alt="image" src="https://github.com/user-attachments/assets/1449c4bd-26c1-411b-8142-983a6e8937f7" />
+flowchart LR
+    A[CSV RUPS<br/>(>13k filas)]
+    A -- datos crudos --> B[extract.py<br/>(lectura robusta)]
+    B -- DataFrame --> C[transform.py<br/>(limpieza + flags + filtro por prestación)]
+    C -- DataFrame limpio --> D[load.py<br/>(carga a SQLite)]
+    D -- INSERT --> E[(SQLite: database/rups.db<br/>Tabla: prestadores)]
+    E -- SELECT --> F[EDA / KPIs / Mapas<br/>(notebooks)]
+
 
 ## 📊 Key KPIs (Summary Table)
 
