@@ -31,6 +31,8 @@ We analyze public service providers offering **water supply (acueducto)**, **sew
 ---
 
 ## ⭐ Star Schema — Data Warehouse
+
+```mermaid
 erDiagram
   DIM_PRESTADOR ||--o{ FACT_PRESTACION : prestador_id
   DIM_UBICACION ||--o{ FACT_PRESTACION : ubicacion_id
@@ -72,6 +74,8 @@ erDiagram
     int servicio_id FK
     int estado_id FK
   }
+```
+
 
 <img width="989" height="611" alt="image" src="https://github.com/user-attachments/assets/f13ca878-da45-43da-8168-a222716d64c2" />
 
