@@ -85,6 +85,21 @@ The model follows a star schema design:
 
 ---
 ## ETL FLOW
+```mermaid
+flowchart LR
+  A["CSV RUPS (>13k filas)"]
+  B["extract.py (lectura robusta)"]
+  C["transform.py (limpieza + flags + filtro)"]
+  D["load.py (carga a SQLite)"]
+  E["SQLite: rups.db (tabla: prestadores)"]
+  F["EDA / KPIs / Mapas (notebooks)"]
+
+  A -->|datos crudos| B
+  B -->|DataFrame| C
+  C -->|DataFrame limpio| D
+  D -->|INSERT| E
+  E -->|SELECT| F
+```
 
 <img width="2073" height="81" alt="image" src="https://github.com/user-attachments/assets/edfb2795-7fd3-4955-9206-658e33cf71b3" />
 
