@@ -33,46 +33,47 @@ We analyze public service providers offering **water supply (acueducto)**, **sew
 ## ⭐ Star Schema — Data Warehouse
 
 erDiagram
-    dim_prestador {
-      INT  prestador_id PK
-      TEXT nombre
-      TEXT nit
-      TEXT tipo_prestador
-      TEXT clasificacion
+    DIM_PRESTADOR {
+        INT  prestador_id PK
+        TEXT nombre
+        TEXT nit
+        TEXT tipo_prestador
+        TEXT clasificacion
     }
 
-    dim_ubicacion {
-      INT  ubicacion_id PK
-      TEXT departamento
-      TEXT municipio
+    DIM_UBICACION {
+        INT  ubicacion_id PK
+        TEXT departamento
+        TEXT municipio
     }
 
-    dim_servicio {
-      INT  servicio_id PK
-      TEXT servicio
-      INT  has_acueducto
-      INT  has_alcantarillado
-      INT  has_aseo
+    DIM_SERVICIO {
+        INT  servicio_id PK
+        TEXT servicio
+        INT  has_acueducto
+        INT  has_alcantarillado
+        INT  has_aseo
     }
 
-    dim_estado {
-      INT  estado_id PK
-      TEXT estado
-      TEXT tipo_inscripcion
+    DIM_ESTADO {
+        INT  estado_id PK
+        TEXT estado
+        TEXT tipo_inscripcion
     }
 
-    fact_prestacion {
-      INT  fact_id PK
-      INT  prestador_id FK
-      INT  ubicacion_id FK
-      INT  servicio_id FK
-      INT  estado_id FK
+    FACT_PRESTACION {
+        INT  fact_id PK
+        INT  prestador_id FK
+        INT  ubicacion_id FK
+        INT  servicio_id FK
+        INT  estado_id FK
     }
 
-    dim_prestador ||--o{ fact_prestacion : prestador_id
-    dim_ubicacion ||--o{ fact_prestacion : ubicacion_id
-    dim_servicio  ||--o{ fact_prestacion : servicio_id
-    dim_estado    ||--o{ fact_prestacion : estado_id
+    %% Relaciones (1:N)
+    DIM_PRESTADOR ||--o{ FACT_PRESTACION : "prestador_id"
+    DIM_UBICACION ||--o{ FACT_PRESTACION : "ubicacion_id"
+    DIM_SERVICIO  ||--o{ FACT_PRESTACION : "servicio_id"
+    DIM_ESTADO    ||--o{ FACT_PRESTACION : "estado_id"
 
 
 
@@ -88,12 +89,29 @@ The model follows a star schema design:
 ## ETL FLOW
 
 flowchart LR
-    A[CSV RUPS<br/>(>13k filas)]
-    A -- datos crudos --> B[extract.py<br/>(lectura robusta)]
-    B -- DataFrame --> C[transform.py<br/>(limpieza + flags + filtro por prestación)]
-    C -- DataFrame limpio --> D[load.py<br/>(carga a SQLite)]
-    D -- INSERT --> E[(SQLite: database/rups.db<br/>Tabla: prestadores)]
-    E -- SELECT --> F[EDA / KPIs / Mapas<br/>(notebooks)]
+    %% ====== Styles ======
+    classDef src fill:#eef4ff,stroke:#6b8cff,stroke-width:1.2,color:#111;
+    classDef proc fill:#e5f7ee,stroke:#3bb273,stroke-width:1.2,color:#111;
+    classDef load fill:#fff2d6,stroke:#e0ad00,stroke-width:1.2,color:#111;
+    classDef db   fill:#efe6ff,stroke:#7d5bd0,stroke-width:1.2,color:#111;
+    classDef viz  fill:#e8f7e9,stroke:#48a868,stroke-width:1.2,color:#111;
+    classDef note fill:transparent,stroke:transparent,color:#666,font-size:12px;
+
+    %% ====== Nodes ======
+    A["CSV RUPS<br/>(>13k rows)"]:::src
+    B["extract.py<br/>(robust read)"]:::src
+    C["transform.py<br/>(cleaning + service flags + filtering)"]:::proc
+    D["load.py<br/>(insert into SQLite)"]:::load
+    E["SQLite: <code>database/rups.db</code><br/>Table: <code>prestadores</code>"]:::db
+    F["EDA / KPIs / Maps<br/>(notebooks)"]:::viz
+
+    %% ====== Flow with edge labels ======
+    A -- "raw data" --> B
+    B -- "DataFrame" --> C
+    C -- "clean DataFrame" --> D
+    D -- "INSERT" --> E
+    E -- "SELECT" --> F
+
 
 
 ## 📊 Key KPIs (Summary Table)
