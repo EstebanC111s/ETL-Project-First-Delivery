@@ -1,0 +1,7 @@
+pandas
+sqlalchemy
+matplotlib
+seaborn
+numpy
+folium
+geopy
