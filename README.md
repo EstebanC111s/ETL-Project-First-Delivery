@@ -101,10 +101,6 @@ flowchart LR
   E -->|SELECT| F
 ```
 
-<img width="2073" height="81" alt="image" src="https://github.com/user-attachments/assets/edfb2795-7fd3-4955-9206-658e33cf71b3" />
-
-
-
 ## 📊 Key KPIs (Summary Table)
 
 | KPI No. | Indicator                                 | Description                                                                 | Output                                 |
