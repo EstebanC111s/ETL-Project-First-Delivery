@@ -75,12 +75,6 @@ erDiagram
     int estado_id FK
   }
 ```
-
-
-<img width="989" height="611" alt="image" src="https://github.com/user-attachments/assets/f13ca878-da45-43da-8168-a222716d64c2" />
-
-
-
 The model follows a star schema design:
 
 - **fact_prestacion**: Service delivery records
@@ -91,6 +85,15 @@ The model follows a star schema design:
 
 ---
 ## ETL FLOW
+
+```mermaid
+flowchart LR
+  A[CSV RUPS<br/>(>13k filas)] -->|datos crudos| B[extract.py<br/>(lectura robusta)]
+  B -->|DataFrame| C[transform.py<br/>(limpieza + flags + filtro por prestación)]
+  C -->|DataFrame limpio| D[load.py<br/>(carga a SQLite)]
+  D -->|INSERT| E[SQLite: rups.db<br/>Tabla: prestadores]
+  E -->|SELECT| F[EDA / KPIs / Mapas<br/>(notebooks)]
+```
 
 <img width="2073" height="81" alt="image" src="https://github.com/user-attachments/assets/edfb2795-7fd3-4955-9206-658e33cf71b3" />
 
