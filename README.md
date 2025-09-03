@@ -129,7 +129,7 @@ python main.py
 
 This project is structured for academic reproducibility and public sector analytics. All KPIs, reports and charts are auto-generated. A georeferenced heatmap with Folium is included in notebooks/.
 
-##👥 Authors
+## 👥 Authors
 
 | Member                  | Responsibilities                                                                                     |
 |------------------------|-------------------------------------------------------------------------------------------------------|
