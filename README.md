@@ -31,6 +31,47 @@ We analyze public service providers offering **water supply (acueducto)**, **sew
 ---
 
 ## ⭐ Star Schema — Data Warehouse
+erDiagram
+  DIM_PRESTADOR ||--o{ FACT_PRESTACION : prestador_id
+  DIM_UBICACION ||--o{ FACT_PRESTACION : ubicacion_id
+  DIM_SERVICIO  ||--o{ FACT_PRESTACION : servicio_id
+  DIM_ESTADO    ||--o{ FACT_PRESTACION : estado_id
+
+  DIM_PRESTADOR {
+    int    prestador_id PK
+    string nombre
+    string nit
+    string tipo_prestador
+    string clasificacion
+  }
+
+  DIM_UBICACION {
+    int    ubicacion_id PK
+    string departamento
+    string municipio
+  }
+
+  DIM_SERVICIO {
+    int    servicio_id PK
+    string servicio
+    int    has_acueducto
+    int    has_alcantarillado
+    int    has_aseo
+  }
+
+  DIM_ESTADO {
+    int    estado_id PK
+    string estado
+    string tipo_inscripcion
+  }
+
+  FACT_PRESTACION {
+    int fact_id PK
+    int prestador_id FK
+    int ubicacion_id FK
+    int servicio_id FK
+    int estado_id FK
+  }
 
 <img width="989" height="611" alt="image" src="https://github.com/user-attachments/assets/f13ca878-da45-43da-8168-a222716d64c2" />
 
